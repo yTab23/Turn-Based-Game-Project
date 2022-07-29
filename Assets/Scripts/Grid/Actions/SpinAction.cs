@@ -32,4 +32,9 @@ public class SpinAction : BaseAction
         totalSpinAmount = 0f;
         Debug.Log("Spin");
     }
+
+    public override string GetActionName()
+    {
+        return "Spin";
+    }
 }
