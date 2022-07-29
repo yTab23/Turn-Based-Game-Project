@@ -15,7 +15,7 @@ public class LevelGrid : MonoBehaviour
     {
         if(Instance != null)
         {
-            Debug.LogError("There's more than one LevbelGrid" + transform + 
+            Debug.LogError("There's more than one LevelGrid" + transform + 
             " - " + Instance);
             Destroy(gameObject);
             return;
@@ -56,6 +56,10 @@ public class LevelGrid : MonoBehaviour
     public Vector3 GetWorldPosition(GridPosition gridPosition) => gridSystem.GetWorldPosition(gridPosition);
 
     public bool IsValidGridPosition(GridPosition gridPosition) => gridSystem.IsValidGridPosition(gridPosition);
+
+    public int GetWidth() => gridSystem.GetWidth();
+
+    public int GetHeight() => gridSystem.GetHeight();
 
     public bool HasAnyUnitOnGridPositon(GridPosition gridPosition)
     {
