@@ -36,9 +36,15 @@ public class MoveAction : MonoBehaviour
         }
     }
 
-    public void Move(Vector3 targetPosition)
+    public void Move(GridPosition gridPosition)
     {
-        this.targetPosition = targetPosition;
+        this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+    }
+
+    public bool IsValidActionGridPosition(GridPosition gridPosition)
+    {
+        List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
+        return validGridPositionList.Contains(gridPosition);
     }
 
     public List<GridPosition> GetValidActionGridPositionList()
@@ -53,7 +59,26 @@ public class MoveAction : MonoBehaviour
             {
                 GridPosition offsetGridPosition = new GridPosition(x, z);
                 GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
+
+                if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
+                {
+                    continue;
+                }
+
+                if(unitGridPosition == testGridPosition)
+                {
+                    // Same Grid Position where the unit is already at
+                    continue;
+                }
+
+                if(LevelGrid.Instance.HasAnyUnitOnGridPositon(testGridPosition))
+                {
+                    // Grid Position already occupied by another unit.
+                    continue;
+                }
+
                 Debug.Log(testGridPosition);
+                validGridPositionList.Add(testGridPosition);
             }
         }
 
