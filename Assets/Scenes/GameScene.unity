@@ -185,8 +185,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 105931797}
-  m_LocalRotation: {x: 0.18909772, y: 0.000000014632319, z: -0.0000000028177758, w: 0.98195827}
-  m_LocalPosition: {x: -0.25, y: 3.999768, z: -9.43}
+  m_LocalRotation: {x: 0.35824043, y: -0.000000014137387, z: 0.0000000054246185, w: 0.9336294}
+  m_LocalPosition: {x: -0.25, y: 8.999095, z: -9.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -756,8 +756,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0.18909772, y: 0.000000014632319, z: -0.0000000028177758, w: 0.98195827}
-  m_LocalPosition: {x: -0.25, y: 3.999768, z: -9.43}
+  m_LocalRotation: {x: 0.35824043, y: -0.000000014137387, z: 0.0000000054246185, w: 0.9336294}
+  m_LocalPosition: {x: -0.25, y: 8.999095, z: -9.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2388,7 +2388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 3.999768, z: -10}
+  m_FollowOffset: {x: 0, y: 8.999095, z: -10}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -2879,6 +2879,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSystemVisualSinglePrefab: {fileID: 1832551220413500993, guid: dd1bef3e8e1bebb409fd6dc51339ec30,
     type: 3}
+  gridVisualTypeMaterialList:
+  - gridVisualType: 0
+    material: {fileID: 2100000, guid: 5f899cef436334947a013b88a8e774b4, type: 2}
+  - gridVisualType: 1
+    material: {fileID: 2100000, guid: 17094736b4c69944487fa22a226fa868, type: 2}
+  - gridVisualType: 2
+    material: {fileID: 2100000, guid: cf579735daf0ada46a35df02bb691bd8, type: 2}
+  - gridVisualType: 4
+    material: {fileID: 2100000, guid: 2d341ca0dd1d3c0469a8bd5ad6112886, type: 2}
+  - gridVisualType: 3
+    material: {fileID: 2100000, guid: 3ca896e6d5410ed419ebede4f835496e, type: 2}
 --- !u!4 &1705411564
 Transform:
   m_ObjectHideFlags: 0
