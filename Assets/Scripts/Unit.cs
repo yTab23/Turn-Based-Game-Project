@@ -112,7 +112,6 @@ public class Unit : MonoBehaviour
             actionPoints = ACTION_POINTS_MAX;
 
             OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
-
         }
     }
 
