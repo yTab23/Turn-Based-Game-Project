@@ -5,14 +5,28 @@ using UnityEngine;
 public class UnitRagdoll : MonoBehaviour
 {
     [SerializeField] private Transform ragdollRootBone;
+    [SerializeField] private Transform weapon;
+    [SerializeField] private float explosionForce;
+    [SerializeField] private float modifiedExplosionForce;
+    [SerializeField] private float explosionRange;
+    
+    private float randomMultiplier;
 
 
-    public void Setup(Transform originalRootBone)
+    public void Setup (Transform _originalRootBone)
     {
-        MatchAllChildTransforms(originalRootBone, ragdollRootBone);
-
-        ApplyExplosionToRagdoll(ragdollRootBone, 300f, transform.position , 10f);
-    }   
+    	MatchAllChildTransforms (_originalRootBone, ragdollRootBone);
+     
+    	randomMultiplier = Random.Range (0.5f, 1.2f);
+    	modifiedExplosionForce = randomMultiplier * explosionForce;
+     
+        // Added code to separate the weapon from the unit
+    	weapon.parent = null;
+    	Rigidbody weaponRigidbody = weapon.gameObject.AddComponent<Rigidbody> ();
+    	weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+     
+    	ApplyExplosionToRagdoll (ragdollRootBone, transform.position);
+    }
 
     private void MatchAllChildTransforms(Transform root, Transform clone)
     {
@@ -29,7 +43,7 @@ public class UnitRagdoll : MonoBehaviour
         }
     }
 
-    private void ApplyExplosionToRagdoll(Transform root, float explosionForce, Vector3 explosionPosition, float explosionRange)
+    private void ApplyExplosionToRagdoll(Transform root, Vector3 explosionPosition)
     {
         foreach (Transform child in root)
         {
@@ -38,7 +52,7 @@ public class UnitRagdoll : MonoBehaviour
                 childRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRange);
             }
 
-            ApplyExplosionToRagdoll(child, explosionForce, explosionPosition, explosionRange);
+            ApplyExplosionToRagdoll(child, explosionPosition);
         }
     }
 }
