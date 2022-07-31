@@ -46,6 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ragdollRootBone: {fileID: 198080654602809482}
+  weapon: {fileID: 189248844624167391}
+  explosionForce: 10
+  modifiedExplosionForce: 10
+  explosionRange: 10
 --- !u!1 &5669165269807954925
 GameObject:
   m_ObjectHideFlags: 0

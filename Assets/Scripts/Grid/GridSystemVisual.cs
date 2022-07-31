@@ -7,6 +7,8 @@ public class GridSystemVisual : MonoBehaviour
 {
     public static GridSystemVisual Instance { get; private set; }
 
+
+
     [Serializable]
     public struct GridVisualTypeMaterial
     {
@@ -59,7 +61,7 @@ public class GridSystemVisual : MonoBehaviour
 
         UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
         LevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
-
+        Unit.OnAnyUnitDead += Unit_OnAnyUnitDead;
         UpdateGridVisual();
     }
 
@@ -163,5 +165,10 @@ public class GridSystemVisual : MonoBehaviour
 
         Debug.LogError("Could not find GridVisualTypeMaterial for GridVisualType " + gridVisualType);
         return null;
+    }
+
+    private void Unit_OnAnyUnitDead(object sender, EventArgs e)  
+    {        
+        UpdateGridVisual();    
     }
 }
