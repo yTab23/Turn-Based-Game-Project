@@ -7,30 +7,27 @@ public class Unit : MonoBehaviour
 {
     private const int ACTION_POINTS_MAX = 2;
 
+
     public static event EventHandler OnAnyActionPointsChanged;
     public static event EventHandler OnAnyUnitSpawned;
     public static event EventHandler OnAnyUnitDead;
 
+
     [SerializeField] private bool isEnemy;
+
 
     private GridPosition gridPosition;
     private HealthSystem healthSystem;
-    private MoveAction moveAction;
-    private SpinAction spinAction;
-    private ShootAction shootAction;
     private BaseAction[] baseActionArray;
     private int actionPoints = ACTION_POINTS_MAX;
 
-    private void Awake() 
+    private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
-        moveAction = GetComponent<MoveAction>();
-        spinAction = GetComponent<SpinAction>();
-        shootAction = GetComponent<ShootAction>();
         baseActionArray = GetComponents<BaseAction>();
     }
 
-    private void Start() 
+    private void Start()
     {
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
@@ -42,14 +39,12 @@ public class Unit : MonoBehaviour
         OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
     }
 
-
-
-    private void Update() 
+    private void Update()
     {
         GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
-        if(newGridPosition != gridPosition)
+        if (newGridPosition != gridPosition)
         {
-            //Unit changed Grid Position
+            // Unit changed Grid Position
             GridPosition oldGridPosition = gridPosition;
             gridPosition = newGridPosition;
 
@@ -57,19 +52,16 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public MoveAction GetMoveAction()
+    public T GetAction<T>() where T : BaseAction
     {
-        return moveAction;
-    }
-
-    public SpinAction GetSpinAction()
-    {
-        return spinAction;
-    }
-
-    public ShootAction GetShootAction()
-    {
-        return shootAction;
+        foreach (BaseAction baseAction in baseActionArray)
+        {
+            if (baseAction is T)
+            {
+                return (T)baseAction;
+            }
+        }
+        return null;
     }
 
     public GridPosition GetGridPosition()
@@ -87,19 +79,13 @@ public class Unit : MonoBehaviour
         return baseActionArray;
     }
 
-    public float GetHealthNormalized()
-    {
-        return healthSystem.GetHealthNormalized();
-    }
-
     public bool TrySpendActionPointsToTakeAction(BaseAction baseAction)
     {
-        if(CanSpendActionPointsToTakeAction(baseAction))
+        if (CanSpendActionPointsToTakeAction(baseAction))
         {
             SpendActionPoints(baseAction.GetActionPointsCost());
             return true;
-        }
-        else
+        } else
         {
             return false;
         }
@@ -107,11 +93,10 @@ public class Unit : MonoBehaviour
 
     public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
     {
-        if(actionPoints >= baseAction.GetActionPointsCost())
+        if (actionPoints >= baseAction.GetActionPointsCost())
         {
             return true;
-        }
-        else
+        } else
         {
             return false;
         }
@@ -131,8 +116,8 @@ public class Unit : MonoBehaviour
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
     {
-        if((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) ||
-        (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
+        if ((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) ||
+            (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
         {
             actionPoints = ACTION_POINTS_MAX;
 
@@ -159,5 +144,9 @@ public class Unit : MonoBehaviour
         OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
     }
 
+    public float GetHealthNormalized()
+    {
+        return healthSystem.GetHealthNormalized();
+    }
 
 }

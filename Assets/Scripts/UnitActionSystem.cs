@@ -6,12 +6,15 @@ using UnityEngine.EventSystems;
 
 public class UnitActionSystem : MonoBehaviour
 {
+
     public static UnitActionSystem Instance { get; private set; }
-    
+
+
     public event EventHandler OnSelectedUnitChanged;
     public event EventHandler OnSelectedActionChanged;
     public event EventHandler<bool> OnBusyChanged;
     public event EventHandler OnActionStarted;
+
 
     [SerializeField] private Unit selectedUnit;
     [SerializeField] private LayerMask unitLayerMask;
@@ -20,12 +23,11 @@ public class UnitActionSystem : MonoBehaviour
     private bool isBusy;
 
 
-    private void Awake() 
+    private void Awake()
     {
-        if(Instance != null)
+        if (Instance != null)
         {
-            Debug.LogError("There's more than one UnitActionSystem" + transform + 
-            " - " + Instance);
+            Debug.LogError("There's more than one UnitActionSystem! " + transform + " - " + Instance);
             Destroy(gameObject);
             return;
         }
@@ -35,27 +37,26 @@ public class UnitActionSystem : MonoBehaviour
     private void Start()
     {
         SetSelectedUnit(selectedUnit);
-        TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
     }
 
-    private void Update() 
+    private void Update()
     {
-        if(isBusy)
+        if (isBusy)
         {
             return;
         }
 
-        if(!TurnSystem.Instance.IsPlayerTurn())
+        if (!TurnSystem.Instance.IsPlayerTurn())
         {
             return;
         }
 
-        if(EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }
 
-        if(TryHandleUnitSelection()) 
+        if (TryHandleUnitSelection())
         {
             return;
         }
@@ -65,7 +66,7 @@ public class UnitActionSystem : MonoBehaviour
 
     private void HandleSelectedAction()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
 
@@ -73,18 +74,19 @@ public class UnitActionSystem : MonoBehaviour
             {
                 return;
             }
-            
-            if(!selectedUnit.TrySpendActionPointsToTakeAction(selectedAction))
+
+            if (!selectedUnit.TrySpendActionPointsToTakeAction(selectedAction))
             {
                 return;
             }
-            
+
             SetBusy();
             selectedAction.TakeAction(mouseGridPosition, ClearBusy);
 
             OnActionStarted?.Invoke(this, EventArgs.Empty);
         }
     }
+
 
     private void SetBusy()
     {
@@ -102,30 +104,31 @@ public class UnitActionSystem : MonoBehaviour
 
     private bool TryHandleUnitSelection()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
             {
-                if(raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
+                if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
                 {
                     if (unit == selectedUnit)
                     {
-                        //Unit already selected
+                        // Unit is already selected
                         return false;
                     }
 
-                    if(unit.IsEnemy())
+                    if (unit.IsEnemy())
                     {
-                        //Clicked on an enemy
+                        // Clicked on an Enemy
                         return false;
                     }
-                    
+
                     SetSelectedUnit(unit);
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -133,7 +136,7 @@ public class UnitActionSystem : MonoBehaviour
     {
         selectedUnit = unit;
 
-        SetSelectedAction(unit.GetMoveAction());
+        SetSelectedAction(unit.GetAction<MoveAction>());
 
         OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -153,24 +156,6 @@ public class UnitActionSystem : MonoBehaviour
     public BaseAction GetSelectedAction()
     {
         return selectedAction;
-    }
-
-    private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
-    {
-        if(TurnSystem.Instance.IsPlayerTurn())
-        {
-            if(selectedUnit == null)
-            {
-                if(UnitManager.Instance.GetFriendlyUnitList().Count > 0)
-                {
-                    SetSelectedUnit(UnitManager.Instance.GetFriendlyUnitList()[0]);
-                }
-                else
-                {
-                    SetSelectedUnit(null);
-                }
-            }
-        }
     }
 
 }

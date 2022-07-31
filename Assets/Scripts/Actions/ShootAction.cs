@@ -162,11 +162,6 @@ public class ShootAction : BaseAction
         return targetUnit;
     }
 
-    public Unit GetUnit()
-    {
-        return unit;
-    }
-
     public int GetMaxShootDistance()
     {
         return maxShootDistance;
