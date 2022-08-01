@@ -59,7 +59,7 @@ public class PathFinding : MonoBehaviour
         }
     }
 
-    public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
+    public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLength)
     {
         List<PathNode> openList = new List<PathNode>();
         List<PathNode> closedList = new List<PathNode>();
@@ -93,6 +93,7 @@ public class PathFinding : MonoBehaviour
             if (currentNode == endNode)
             {
                 //Reached final node
+                pathLength = endNode.GetFCost();
                 return CalculatePath(endNode);
             }
 
@@ -130,6 +131,7 @@ public class PathFinding : MonoBehaviour
         }
 
         // No path found
+        pathLength = 0;
         return null;
     }
 
@@ -234,5 +236,21 @@ public class PathFinding : MonoBehaviour
         }
 
         return gridPositionlist;
+    }
+
+    public bool IsWalkableGridPosition(GridPosition gridPosition)
+    {
+        return gridSystem.GetGridObject(gridPosition).IsWalkable();
+    }
+
+    public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
+    {
+        return FindPath(startGridPosition, endGridPosition, out int pathLength) != null;
+    }
+
+    public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
+    {
+        FindPath(startGridPosition, endGridPosition, out int pathLength);
+        return pathLength;
     }
 }
