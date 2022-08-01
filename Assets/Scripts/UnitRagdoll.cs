@@ -6,9 +6,6 @@ public class UnitRagdoll : MonoBehaviour
 {
     [SerializeField] private Transform ragdollRootBone;
     [SerializeField] private Transform weapon;
-    [SerializeField] private float explosionForce;
-    [SerializeField] private float modifiedExplosionForce;
-    [SerializeField] private float explosionRange;
     
     private float randomMultiplier;
 
@@ -17,15 +14,14 @@ public class UnitRagdoll : MonoBehaviour
     {
     	MatchAllChildTransforms (_originalRootBone, ragdollRootBone);
      
-    	randomMultiplier = Random.Range (0.5f, 1.2f);
-    	modifiedExplosionForce = randomMultiplier * explosionForce;
-     
+        Vector3 randomDir = new Vector3(Random.Range(-1f, +1f), 0, Random.RandomRange(-1f, +1f));
+
         // Added code to separate the weapon from the unit
     	weapon.parent = null;
     	Rigidbody weaponRigidbody = weapon.gameObject.AddComponent<Rigidbody> ();
     	weaponRigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
      
-    	ApplyExplosionToRagdoll (ragdollRootBone, transform.position);
+    	ApplyExplosionToRagdoll (ragdollRootBone, 300f, transform.position + randomDir, 10f);
     }
 
     private void MatchAllChildTransforms(Transform root, Transform clone)
@@ -43,7 +39,7 @@ public class UnitRagdoll : MonoBehaviour
         }
     }
 
-    private void ApplyExplosionToRagdoll(Transform root, Vector3 explosionPosition)
+    private void ApplyExplosionToRagdoll(Transform root, float explosionForce, Vector3 explosionPosition, float explosionRange)
     {
         foreach (Transform child in root)
         {
@@ -52,7 +48,7 @@ public class UnitRagdoll : MonoBehaviour
                 childRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRange);
             }
 
-            ApplyExplosionToRagdoll(child, explosionPosition);
+            ApplyExplosionToRagdoll(child, explosionForce, explosionPosition, explosionRange);
         }
     }
 }
